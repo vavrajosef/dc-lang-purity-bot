@@ -6,15 +6,16 @@ import (
 	"regexp"
 
 	"github.com/bwmarrin/discordgo"
+	"golang.org/x/text/language"
 )
 
-var IS_WORD_REGEX = regexp.MustCompile(`^[a-zA-Z]+$`)
+var IS_WORD_REGEX = regexp.MustCompile(`^[a-zA-Z]+[,.]?$`)
 
 func ProcessMessage(translationInstructions string, previousMessage string) (string, error) {
 	instructionSlice := strings.Split(translationInstructions, " ")
 	instructionsLength := len(instructionSlice)
 	if instructionsLength != 3 {
-		return "", fmt.Errorf("Illegal number of instructions. %d is not supported: %s", instructionsLength, translationInstructions)
+		return "", fmt.Errorf("illegal number of instructions. %d is not supported: %s", instructionsLength, translationInstructions)
 	}
 	sourceLanguageString := instructionSlice[1]
 	targetLanguageString := instructionSlice[2]
@@ -46,7 +47,8 @@ func ProcessMessage(translationInstructions string, previousMessage string) (str
 
 
 func CheckLanguage(lang string) error {
-	
+	_, err := language.Parse(lang)
+	return err
 }
 
 func GetMessageReferenceContent(session *discordgo.Session, channelId string, messageId string) (string, error) {

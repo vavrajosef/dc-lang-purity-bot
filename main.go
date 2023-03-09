@@ -61,9 +61,9 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if err != nil {
 				fmt.Println("Error occured: " + err.Error())
 			} else {
-				fmt.Println("Translation success: this is result " + translatedMessage)
+				fmt.Println("Translation success: " + translatedMessage)
 				if translatedMessage == "" {
-					s.ChannelMessageSend(m.ChannelID, "Nothing to translate, text seems pure.")
+					s.ChannelMessageSend(m.ChannelID, "Nothing to translate.")
 				} else {
 					s.ChannelMessageSend(m.ChannelID, translatedMessage)
 				}

@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
 	"encoding/json"
-    "io/ioutil"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 type Response struct {
@@ -16,6 +17,7 @@ type ResponseData struct {
 }
 
 func Translate(word string, sourceLang string, targetLang string) (string, error) {
+	word = strings.ToLower(word)
 	translationUrl := createUrl(word, sourceLang, targetLang)
 	translatedWord, err := callApiToTranslate(translationUrl)
 	if err != nil {
@@ -24,6 +26,7 @@ func Translate(word string, sourceLang string, targetLang string) (string, error
 	if translatedWord == word {
 		return "", nil
 	}
+	/*
 	reversedUrl := createUrl(word, targetLang, sourceLang)
 	reverseTranslatedWord, err := callApiToTranslate(reversedUrl)
 	if err != nil {
@@ -32,6 +35,7 @@ func Translate(word string, sourceLang string, targetLang string) (string, error
 	if reverseTranslatedWord != word {
 		return "", err
 	}
+	*/
 	return translatedWord, nil
 }
 
@@ -50,7 +54,7 @@ func callApiToTranslate(url string) (string, error) {
 	json.Unmarshal(responseBytes, &responseObject)
 
 	translatedWord := responseObject.ResponseData.TranslatedText
-	return translatedWord, nil
+	return strings.ToLower(translatedWord), nil
 }
 
 func createUrl(word string, sourceLang string, targetLang string) string {
